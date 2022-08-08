@@ -1,9 +1,5 @@
 #include "External.h"
 
-int Max(int n1,int n2){
-   return n1 > n2 ? n1 : n2;
-}
-
 void SetWindowSize(int8_t width, int8_t height){
 	COORD      coord = { width, height };
     SMALL_RECT rmin  = { 0, 0, 1, 1 };
@@ -26,16 +22,16 @@ void ShowsCursor(bool visible){
 void SetPosition(int16_t X, int16_t Y){
     HANDLE Screen;
     Screen = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD Position= { X, Y };
+    COORD Position = { Y, X };
     SetConsoleCursorPosition(Screen, Position);
 }
 
-void cPrint(int16_t y, int16_t x, char c){
+void cPrint(char c, int16_t x, int16_t y){
     SetPosition(x,y);
     printf("%c",c);
 }
 
-void sPrint(int16_t y, int16_t x, char* s){
+void sPrint(char* s, int16_t x, int16_t y){
     SetPosition(x,y);
     printf("%s",s);
 }
@@ -50,14 +46,14 @@ void SetColor(int8_t ForgC) {
     }
 }
 
-void cColoredPrint(int16_t y,int16_t x,char c,Color color){
+void cColoredPrint(char c, int16_t x, int16_t y, Color color){
     SetColor(color);
     SetPosition(x,y);
     printf("%c",c);
     SetColor(WHITE);
 }
 
-void sColoredPrint(int16_t y,int16_t x, char* s,Color color){
+void sColoredPrint(char* s, int16_t x, int16_t y, Color color){
     SetColor(color);
     SetPosition(x,y);
     printf("%s",s);
@@ -65,5 +61,5 @@ void sColoredPrint(int16_t y,int16_t x, char* s,Color color){
 }
 
 void Print(const Entity entity){
-    cPrint(entity.y,entity.x,entity.c);
+    cPrint(entity.c,entity.x,entity.y);
 }
