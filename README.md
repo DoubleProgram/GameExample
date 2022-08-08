@@ -1,2 +1,2 @@
 # GameExample
-To compile on mac, write clang -lncurses main.c external.c game.c
+To compile on mac, write clang -lncurses main.c external.c game.c in to the terminal
