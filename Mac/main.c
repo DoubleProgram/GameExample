@@ -17,10 +17,8 @@ int main(int argc, char *argv[]) {
    
     start_color();
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
-    init_pair(2, COLOR_RED, COLOR_BLACK);
-    init_pair(3, COLOR_GREEN, COLOR_BLACK);
-    init_pair(4, COLOR_CYAN, COLOR_BLACK);
-    init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(2, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(3, COLOR_RED, COLOR_BLACK);
    
     keypad(stdscr,true);
     noecho();
@@ -28,7 +26,7 @@ int main(int argc, char *argv[]) {
 
     refresh();
     
-    Setup(60,20);
+    Setup(50,20);
     Play();
     getch();
     
