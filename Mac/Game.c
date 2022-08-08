@@ -64,6 +64,8 @@ void Play(){
         Move();
         refresh();
     } while(!gameOver);
+    
+    mvaddstr(HEIGHT/2, WIDTH/2-6, "You've lost!");
 }
 
 void Move(){
@@ -121,6 +123,6 @@ void CheckForCollisions(){
 void UpdateScore(){
     score++;
     char* sscore;
-    sscore = itoa(score,10);
-    mvaddstr(HEIGHT,12,sscore);
+    sscore = itoa(score, 10);
+    mvaddstr(HEIGHT, 12, sscore);
 }
