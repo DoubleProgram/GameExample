@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <windows.h>
 #include <stdint.h>
+#include <conio.h>
 
 typedef enum Color {
     BLACK = 0,
@@ -34,11 +35,11 @@ typedef struct Entity{
 void SetWindowSize(int8_t width, int8_t height);
 void ShowsCursor(bool visible);
 void SetPosition(int16_t X, int16_t Y);
-void cPrint(int16_t y, int16_t x, char c);
-void sPrint(int16_t y, int16_t x, char* c);
+void cPrint(char c, int16_t x, int16_t y);
+void sPrint(char* c, int16_t x, int16_t y);
 void SetColor(int8_t ForgC);
-void cColoredPrint(int16_t y, int16_t x, char c, Color color);
-void sColoredPrint(int16_t y, int16_t x, char* s, Color color);
+void cColoredPrint(char c, int16_t x, int16_t y, Color color);
+void sColoredPrint(char* s, int16_t x, int16_t y, Color color);
 void Print(const Entity entity);
 
 #endif
