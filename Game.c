@@ -1,83 +1,122 @@
 #include "Game.h"
+#include <time.h>
 
 static int WIDTH;
 static int HEIGHT;
-static Entity player = { GREEN, '@', 0, 0 };
+static Entity player = { WHITE, '@', 0, 0 };
 static const Entity coin = { YELLOW, '$', 0, 0 };
-static const Entity bomb = { BLUE, 'o', 0, 0 };
-//static const POS* bombs;
-static const bool gameOver = false;
+static const Entity bomb = { DARKRED, 'o', 0, 0 };
+static bool gameOver = false;
 static int score = 0;
-static int amountOfBombs;
-//static char** map;
 static char* map;
 
 void Setup(int width, int height){
-	WIDTH = width;
-	HEIGHT = height;
-	SetWindowSize(WIDTH, HEIGHT+1); //NOTE: +1 at the height because of the score message
-	ShowsCursor(false);
-	sColoredPrint(HEIGHT, 0, "Your Score:", WHITE);
-	//map = malloc(sizeof(char[HEIGHT][WIDTH])); 
-	map = malloc(sizeof(char) * WIDTH * HEIGHT);
-	srand(time(NULL));
-	amountOfBombs = (HEIGHT * WIDTH) / 10;
-	
-	//bombs = (POS*) malloc(sizeof(POS) * amountOfBombs);
-	
-	POS rndp;
-	int i;
-	for(i = 0; i < amountOfBombs; i++){
-		do{
-			rndp.x = rand() % HEIGHT;
-			rndp.y = rand() % WIDTH;
-		}while(map[rndp.x * WIDTH + rndp.y] != NULL);
-	
-		map[rndp.x * WIDTH + rndp.y] = bomb.c;
-		Print(bomb);
-	}
+    WIDTH = width;
+    HEIGHT = height;
+    SetWindowSize(width,height+1);
+    ShowsCursor(false);
+    SetConsoleTitle("Demo");
+
+    map = (char*)calloc(WIDTH * HEIGHT,sizeof(char));
+    srand((unsigned)time(NULL));
+    int amountOfBombs = (HEIGHT * WIDTH) / 10;
+    int amountOfCoins = amountOfBombs / 5;
+    sPrint("Your Score: 0", HEIGHT, 0);
+    POS rndp;
+    int i;
+    for(i = 0; i < amountOfBombs; i++){
+        do{
+            rndp.x = rand() % HEIGHT;
+            rndp.y = rand() % WIDTH;
+        }while(map[rndp.x * WIDTH + rndp.y] != 0);
+    
+        map[rndp.x * WIDTH + rndp.y] = bomb.c;
+        cColoredPrint(bomb.c, rndp.x, rndp.y, bomb.color);
+    }
+    
+    for(i = 0; i < amountOfCoins; i++){
+        do{
+            rndp.x = rand() % HEIGHT;
+            rndp.y = rand() % WIDTH;
+        }while(map[rndp.x * WIDTH + rndp.y] != 0);
+    
+        map[rndp.x * WIDTH + rndp.y] = coin.c;
+        cColoredPrint(coin.c, rndp.x, rndp.y, coin.color);
+    }
+    
+    do{
+        rndp.x = rand() % HEIGHT;
+        rndp.y = rand() % WIDTH;
+    }while(map[rndp.x * WIDTH + rndp.y] != 0);
+    
+    player.x = rndp.x;
+    player.y = rndp.y;
+    Print(player);
 }
 
 void Play(){
-	do {
-		Move();
-	} while(!gameOver);
-	
-	sColoredPrint(0,0,"Game Over!", RED);
+    do {
+        Move();
+    } while(!gameOver);
+
+    sPrint("You've lost!", HEIGHT/2, WIDTH/2-6);
 }
 
 void Move(){
-	switch(getch()){
-		case 77: 
-			if (CanMove(player.x, player.y + 1)){
-				player.y++;
-				CheckForCollisions();
-		
-			}
-				
-		break; //right
-		case 75: break; //left
-		case 72: break; //up
-		case 80: break; //down
-	}
+    switch(getch()){
+        case 77: //right key
+            if (CanMove(player.x, player.y + 1)){
+                cPrint(' ', player.x, player.y);
+                player.y++;
+                Print(player);
+                CheckForCollisions();
+            }
+        break;
+        case 75: //left key
+            if (CanMove(player.x, player.y - 1)){
+                cPrint(' ', player.x,player.y);
+                player.y--;
+                Print(player);
+                CheckForCollisions();
+            }
+            break;
+        case 72: //up key
+            if (CanMove(player.x - 1, player.y)){
+                cPrint(' ', player.x,player.y);
+                player.x--;
+                Print(player);
+                CheckForCollisions();
+            }
+            break;
+        case 80: //down key
+            if (CanMove(player.x + 1, player.y)){
+                cPrint(' ', player.x,player.y);
+                player.x++;
+                Print(player);
+                CheckForCollisions();
+            }
+            break;
+    }
 }
 
 bool CanMove(int x, int y){
-	return x >= 0 || y >= 0 || x < WIDTH || y < HEIGHT;
+    return x >= 0 && y >= 0 && x < HEIGHT && y < WIDTH;
 }
 
 void CheckForCollisions(){
-	if (player.x == coin.x || player.y == coin.y)
-		UpdateScore();
-}
-
-void SpawnCoin(){
-
+    if (map[player.x * WIDTH + player.y] == coin.c){
+        map[player.x * WIDTH + player.y] = ' ';
+        UpdateScore();
+    }
+        
+    else if(map[player.x * WIDTH + player.y] == bomb.c){
+        gameOver = true;
+    }
 }
 
 void UpdateScore(){
-	score++;
-	char sscore[20];
-	itoa(score, sscore, 10);
-	sColoredPrint(HEIGHT, 13, sscore, WHITE);
+    score++;
+    char sscore[20];
+    itoa(score,sscore, 10);
+    sPrint(sscore, HEIGHT, 12);
 }
