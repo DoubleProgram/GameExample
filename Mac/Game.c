@@ -65,6 +65,7 @@ void Play(){
         refresh();
     } while(!gameOver);
     
+    free(map);
     mvaddstr(HEIGHT/2, WIDTH/2-6, "You've lost!");
 }
 
