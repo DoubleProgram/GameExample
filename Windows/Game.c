@@ -24,6 +24,7 @@ void Setup(int width, int height){
     sPrint("Your Score: 0", HEIGHT, 0);
     POS rndp;
     int i;
+    
     for(i = 0; i < amountOfBombs; i++){
         do{
             rndp.x = rand() % HEIGHT;
@@ -58,7 +59,8 @@ void Play(){
     do {
         Move();
     } while(!gameOver);
-
+    
+    free(map);
     sPrint("You've lost!", HEIGHT/2, WIDTH/2-6);
 }
 
